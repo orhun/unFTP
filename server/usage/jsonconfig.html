@@ -1,0 +1,303 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+
+    <title>JSON Configuration</title>
+    <meta name="description" content="Documentation for unFTP">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Source+Sans+Pro:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" type="text/css" href="/assets/normalize.css?v=1643400374"
+        media="screen" />
+    <link rel="stylesheet" type="text/css" href="/assets/doctave-style.css?v=1643400374"
+        media="screen" />
+    <link rel="stylesheet" type="text/css" href="/assets/katex.css?v=1643400374" media="screen" />
+    <link rel="stylesheet" type="text/css" href="/assets/prism-ghcolors.css?v=1643400374"
+        media="screen" />
+
+    <script>
+        var DOCTAVE_TIMESTAMP = "1643400374";
+        var BASE_PATH = "/";
+        var color = localStorage.getItem('doctave-color')
+
+        if (color === 'dark') {
+            document.getElementsByTagName('html')[0].classList.remove('light');
+            document.getElementsByTagName('html')[0].classList.add('dark');
+        } else {
+            document.getElementsByTagName('html')[0].classList.remove('dark');
+            document.getElementsByTagName('html')[0].classList.add('light');
+        }
+    </script>
+
+    
+</head>
+
+<body>
+    <label for='menu-toggle-switch' class='menu-toggle-button'>
+        ☰
+    </label>
+    <input type="checkbox" id="menu-toggle-switch" value='0' />
+    <div class='page'>
+        <div class='header'>
+            <div class='logo'>
+                
+                <a href="/">
+                    <img src="/assets/logo.png" alt='unFTP logo'></img>
+                </a>
+                
+                <h2 class='project-name'>
+                    <a href="/">
+                        unFTP
+                    </a>
+                </h2>
+            </div>
+            <div class='search'>
+                <form id='search-form'>
+    <input type='text' id='search-box' autocomplete="off" placeholder="Search..."></input>
+    <span class='search-icon'>S</span>
+    <ul id='search-results'></ul>
+</form>
+
+            </div>
+            <div class='header-dummy-right'>
+            </div>
+        </div>
+        <div class='container'>
+            <div class='sidebar-left'>
+                <nav class='site-nav'>
+    <ul>
+        
+            <li><a href="/overview">Overview</a></li>
+            
+        
+            <li><a href="/libunftp">libunftp</a></li>
+            
+                <ul>
+    
+        <li><a href="/libunftp/overview">overview</a></li>
+        
+    
+</ul>
+
+            
+        
+            <li><a href="/server">server</a></li>
+            
+                <ul>
+    
+        <li><a href="/server/installation">Installation</a></li>
+        
+    
+        <li><a href="/server/usage">usage</a></li>
+        
+            <ul>
+    
+        <li><a href="/server/usage/ftps">Enabling TLS</a></li>
+        
+    
+        <li><a href="/server/usage/starting">Getting Started</a></li>
+        
+    
+        <li><a class="active" href="/server/usage/jsonconfig">JSON Configuration</a></li>
+        
+    
+        <li><a href="/server/usage/docker">docker</a></li>
+        
+    
+        <li><a href="/server/usage/gcs">gcs</a></li>
+        
+    
+        <li><a href="/server/usage/monitoring">monitoring</a></li>
+        
+    
+        <li><a href="/server/usage/proxy-protocol">proxy-protocol</a></li>
+        
+    
+</ul>
+
+        
+    
+</ul>
+
+            
+        
+            <li><a href="/support">support</a></li>
+            
+        
+    </ul>
+    <span id='light-dark-mode-switch'>
+        <svg xmlns="http://www.w3.org/2000/svg" id="dark-mode-icon" viewBox="0 0 20 20" fill="currentColor">
+            <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
+        </svg>
+
+        <svg xmlns="http://www.w3.org/2000/svg" id="light-mode-icon" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clip-rule="evenodd" />
+        </svg>
+    </span>
+</nav>
+
+            </div>
+            <div class='doctave-content'>
+                <h1 id="json-file-authenticator">JSON File Authenticator</h1>
+<p>Authenticate with credentials stored in a JSON file:</p>
+<p>Create a credentials file (e.g. credentials.json):</p>
+<pre><code class="language-json">[
+  {
+    "username": "alice",
+    "password": "12345678"
+  },
+  {
+    "username": "bob",
+    "password": "secret"
+  }
+]
+</code></pre>
+<pre><code class="language-sh">unftp \
+    --auth-type=json \
+    --auth-json-path=credentials.json
+</code></pre>
+<p>Require Mutual TLS:</p>
+<pre><code class="language-sh"># Create Server Root Key and Certificate
+openssl genrsa -out unftp_client_ca.key 2048
+openssl req -new -x509 -days 365 \
+	-key unftp_client_ca.key \
+        -subj '/CN=unftp-ca.mysite.com/O=bol.com/C=NL' \
+	-out unftp_client_ca.crt
+
+# Create a client side key
+openssl genrsa -out client.key 2048
+
+# Create a client side certificate signing request (CSR)
+openssl req -new -sha256 \
+    -key client.key \
+    -subj '/CN=unftp-client.mysite.com/O=bol.com/C=NL' \
+    -reqexts SAN \
+    -config &lt;(cat /etc/ssl/openssl.cnf \
+        &lt;(printf "\n[SAN]\nsubjectAltName=DNS:localhost")) \
+    -out client.csr
+
+# Sign the certificate with our own CA
+openssl x509 -req \
+  -in client.csr \
+  -CA unftp_client_ca.crt \
+  -CAkey unftp_client_ca.key \
+  -CAcreateserial \
+  -extfile &lt;(printf "subjectAltName=DNS:localhost") \
+  -out client.crt \
+  -days 1024 \
+  -sha256
+  
+# Run unFTP pointing to the CA cert
+unftp \
+  --root-dir=/home/unftp/data \
+  --ftps-certs-file=/home/unftp/unftp.crt \
+  --ftps-key-file=/home/unftp/unftp.key \
+  --ftps-required-on-control-channel=all \
+  --ftps-client-auth=require \
+  --ftps-trust-store=/Users/xxx/unftp/unftp_client_ca.crt
+  
+# From another terminal: Connect with CURL, sending the client certificate
+curl -v \
+  --insecure \
+  --user 'test:test' \
+  --ftp-ssl --ssl-reqd \
+  --ftp-pasv --disable-epsv \
+  --cacert unftp_client_ca.crt \
+  --cert client.crt \
+  --key client.key \
+  --cert-type PEM \
+  --pass '' \
+  --tlsv1.2 \
+  ftp://localhost:2121/  
+</code></pre>
+<p>To do per-user settings you can expand the above mentioned JSON file to also include some per user settings:</p>
+<pre><code class="language-json">[
+  {
+    "username": "alice",
+    "password": "12345678",
+    "vfs_perms": ["-mkdir","-rmdir","-del","-ren", "-md5"],
+    "root": "alice",
+    "account_enabled": true
+  },
+  {
+    "username": "bob",
+    "password": "secret",
+    "client_cert": {
+      "allowed_cn": "bob-the-builder"
+    }
+  },
+  {
+    "username": "vincent",
+    "root": "vincent",
+    "vfs_perms": ["none", "+put", "+md5"],
+    "client_cert": {}
+  }  
+]
+</code></pre>
+<p>And let unFTP point to it:</p>
+<pre><code class="language-sh">unftp \
+    --auth-type=json \
+    --auth-json-path=users.json \
+    --usr-json-path=users.json \
+    ...
+</code></pre>
+<p>In the above configuration we use:</p>
+<ul>
+<li><code>vfs_perms</code> - Specifies what permissions users can have. Alice cannot create directories, remove them, delete files nor 
+calculate the md5 of files. Bob can do everything while Vincent can only do uploads and calculate md5 files. Valid values
+here are "none", "all", "-mkdir, "-rmdir, "-del","-ren", "-md5", "-get", "-put", "-list", "+mkdir", "+rmdir", "+del", 
+"+ren", "+md5", "+get", "+put" and "+list".</li>
+<li><code>root</code> - Sets the home directory of the user relative to the storage back-end root. Alice can only see files inside 
+<code>$SB_ROOT/alice</code>, Bob can see all files and Vincent thinks <code>$SB_ROOT/vincent</code> is the FTP root similar to Alice.</li>
+<li><code>account_enabled</code> - Allows to disable the user's account completely</li>
+<li><code>client_cert</code> - Allows specifying whether a client certificate is required and how to handle it. Alice logs in with 
+normal user/password authentication. No client certificate needed. Bob needs to provide a valid client certificate 
+with common name (CN) containing, 'bob-the-builder' and also needs to provide a password. Vincent can do passwordless 
+login when providing a valid certificate.</li>
+</ul>
+
+            </div>
+            <div class='sidebar-right'>
+                <div class='page-nav' id='page-nav'>
+                    <p class='page-nav-header'>On this page</p>
+                    <ul>
+                        
+                        <li class='page-nav-level-1'>
+                            <a href='#json-file-authenticator'>JSON File Authenticator</a>
+                        </li>
+                        
+                    </ul>
+                </div>
+            </div>
+            <div class='wave-container'>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+                    <path fill-opacity="0.35"
+                        d="M0,192L60,213.3C120,235,240,277,360,277.3C480,277,600,235,720,192C840,149,960,107,1080,122.7C1200,139,1320,213,1380,250.7L1440,288L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z">
+                    </path>
+                    <path fill-opacity="0.5"
+                        d="M0,160L60,181.3C120,203,240,245,360,229.3C480,213,600,139,720,138.7C840,139,960,213,1080,229.3C1200,245,1320,203,1380,181.3L1440,160L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z">
+                    </path>
+                    <path fill-opacity="0.2"
+                        d="M0,224L60,197.3C120,171,240,117,360,117.3C480,117,600,171,720,186.7C840,203,960,181,1080,186.7C1200,192,1320,224,1380,240L1440,256L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z">
+                    </path>
+                </svg>
+                <p>Powered by <a href='https://cli.doctave.com' target='_blank'>Doctave</a></p>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="/assets/katex.js?v=1643400374"></script>
+    <script type="text/javascript" src="/assets/mermaid.js?v=1643400374"></script>
+    <script type="text/javascript" src="/assets/elasticlunr.js?v=1643400374"></script>
+    <script type="text/javascript" src="/assets/prism.js?v=1643400374"></script>
+    <script type="text/javascript" src="/assets/doctave-app.js?v=1643400374"></script>
+
+    
+</body>
+
+</html>
