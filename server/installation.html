@@ -13,16 +13,16 @@
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Source+Sans+Pro:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&display=swap"
         rel="stylesheet">
 
-    <link rel="stylesheet" type="text/css" href="/unFTP/assets/normalize.css?v=1643407368"
+    <link rel="stylesheet" type="text/css" href="/unFTP/assets/normalize.css?v=1643407768"
         media="screen" />
-    <link rel="stylesheet" type="text/css" href="/unFTP/assets/doctave-style.css?v=1643407368"
+    <link rel="stylesheet" type="text/css" href="/unFTP/assets/doctave-style.css?v=1643407768"
         media="screen" />
-    <link rel="stylesheet" type="text/css" href="/unFTP/assets/katex.css?v=1643407368" media="screen" />
-    <link rel="stylesheet" type="text/css" href="/unFTP/assets/prism-ghcolors.css?v=1643407368"
+    <link rel="stylesheet" type="text/css" href="/unFTP/assets/katex.css?v=1643407768" media="screen" />
+    <link rel="stylesheet" type="text/css" href="/unFTP/assets/prism-ghcolors.css?v=1643407768"
         media="screen" />
 
     <script>
-        var DOCTAVE_TIMESTAMP = "1643407368";
+        var DOCTAVE_TIMESTAMP = "1643407768";
         var BASE_PATH = "/unFTP/";
         var color = localStorage.getItem('doctave-color')
 
@@ -87,7 +87,7 @@
         
             <ul>
     
-        <li><a href="/unFTP/server/usage/docker">Docker Images</a></li>
+        <li><a href="/unFTP/server/usage/docker">Docker</a></li>
         
     
         <li><a href="/unFTP/server/usage/ftps">Enabling TLS</a></li>
@@ -163,6 +163,12 @@ you can choose between a statically linked image (no PAM integration) or a dynam
 </code></pre>
 <p>and find unftp in <code>~/.cargo/bin/unftp</code>. You may want to add <code>~/.cargo/bin</code> to your PATH if you haven't done so. The above 
 merely creates the binary there, it won't start it as a service at the moment.</p>
+<h2 id="docker-images">Docker Images</h2>
+<p>You can download pre-made docker images from <a href="https://hub.docker.com/r/bolcom/unftp/tags">docker hub</a> e.g.:</p>
+<pre><code class="language-sh">docker pull bolcom/unftp:v0.13.0-alpine
+docker pull bolcom/unftp:v0.13.0-alpine-istio
+docker pull bolcom/unftp:v0.13.0-scratch
+</code></pre>
 
             </div>
             <div class='sidebar-right'>
@@ -180,6 +186,10 @@ merely creates the binary there, it won't start it as a service at the moment.</
                         
                         <li class='page-nav-level-2'>
                             <a href='#from-source'>From Source</a>
+                        </li>
+                        
+                        <li class='page-nav-level-2'>
+                            <a href='#docker-images'>Docker Images</a>
                         </li>
                         
                     </ul>
@@ -201,11 +211,11 @@ merely creates the binary there, it won't start it as a service at the moment.</
             </div>
         </div>
     </div>
-    <script type="text/javascript" src="/unFTP/assets/katex.js?v=1643407368"></script>
-    <script type="text/javascript" src="/unFTP/assets/mermaid.js?v=1643407368"></script>
-    <script type="text/javascript" src="/unFTP/assets/elasticlunr.js?v=1643407368"></script>
-    <script type="text/javascript" src="/unFTP/assets/prism.js?v=1643407368"></script>
-    <script type="text/javascript" src="/unFTP/assets/doctave-app.js?v=1643407368"></script>
+    <script type="text/javascript" src="/unFTP/assets/katex.js?v=1643407768"></script>
+    <script type="text/javascript" src="/unFTP/assets/mermaid.js?v=1643407768"></script>
+    <script type="text/javascript" src="/unFTP/assets/elasticlunr.js?v=1643407768"></script>
+    <script type="text/javascript" src="/unFTP/assets/prism.js?v=1643407768"></script>
+    <script type="text/javascript" src="/unFTP/assets/doctave-app.js?v=1643407768"></script>
 
     
 </body>
