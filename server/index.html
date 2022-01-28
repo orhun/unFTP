@@ -5,7 +5,7 @@
 <head>
     <meta charset="utf-8">
 
-    <title>server</title>
+    <title>unFTP Server</title>
     <meta name="description" content="Documentation for unFTP">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -13,16 +13,16 @@
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Source+Sans+Pro:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&display=swap"
         rel="stylesheet">
 
-    <link rel="stylesheet" type="text/css" href="/unFTP/assets/normalize.css?v=1643401370"
+    <link rel="stylesheet" type="text/css" href="/unFTP/assets/normalize.css?v=1643405759"
         media="screen" />
-    <link rel="stylesheet" type="text/css" href="/unFTP/assets/doctave-style.css?v=1643401370"
+    <link rel="stylesheet" type="text/css" href="/unFTP/assets/doctave-style.css?v=1643405759"
         media="screen" />
-    <link rel="stylesheet" type="text/css" href="/unFTP/assets/katex.css?v=1643401370" media="screen" />
-    <link rel="stylesheet" type="text/css" href="/unFTP/assets/prism-ghcolors.css?v=1643401370"
+    <link rel="stylesheet" type="text/css" href="/unFTP/assets/katex.css?v=1643405759" media="screen" />
+    <link rel="stylesheet" type="text/css" href="/unFTP/assets/prism-ghcolors.css?v=1643405759"
         media="screen" />
 
     <script>
-        var DOCTAVE_TIMESTAMP = "1643401370";
+        var DOCTAVE_TIMESTAMP = "1643405759";
         var BASE_PATH = "/unFTP/";
         var color = localStorage.getItem('doctave-color')
 
@@ -73,28 +73,17 @@
                 <nav class='site-nav'>
     <ul>
         
-            <li><a href="/unFTP/overview">Overview</a></li>
-            
-        
             <li><a href="/unFTP/libunftp">libunftp</a></li>
             
-                <ul>
-    
-        <li><a href="/unFTP/libunftp/overview">overview</a></li>
         
-    
-</ul>
-
-            
-        
-            <li><a class="active" href="/unFTP/server">server</a></li>
+            <li><a class="active" href="/unFTP/server">unFTP Server</a></li>
             
                 <ul>
     
         <li><a href="/unFTP/server/installation">Installation</a></li>
         
     
-        <li><a href="/unFTP/server/usage">usage</a></li>
+        <li><a href="/unFTP/server/usage">Usage</a></li>
         
             <ul>
     
@@ -127,7 +116,10 @@
 
             
         
-            <li><a href="/unFTP/support">support</a></li>
+            <li><a href="/unFTP/support">Support</a></li>
+            
+        
+            <li><a href="/unFTP/licensing">Licensing</a></li>
             
         
     </ul>
@@ -144,26 +136,27 @@
 
             </div>
             <div class='doctave-content'>
-                <h1 id="index-of-server">Index of server</h1>
-<p>This page was generated automatically by Doctave, because the directory <code>docs/server</code> did not contain an index <code>README.md</code> file. You can customize this page by creating one yourself.</p>
-<h2 id="pages">Pages</h2>
+                <p><a href="https://crates.io/crates/unftp"><img src="https://img.shields.io/crates/v/unftp.svg" alt="Crate Version"></a>
+<a href="https://travis-ci.org/bolcom/unFTP"><img src="https://travis-ci.org/bolcom/unFTP.svg" alt="Build Status"></a> 
+<a href="https://hub.docker.com/r/bolcom/unftp/"><img src="https://img.shields.io/docker/pulls/bolcom/unftp.svg?maxAge=2592000?style=plastic" alt="Docker Pulls"></a>
+<a href="https://t.me/unftp"><img src="https://img.shields.io/badge/follow%20on-Telegram-brightgreen.svg" alt="Follow on Telegram"></a></p>
+<p>unFTP is a FTP(S) server written in <a href="https://www.rust-lang.org">Rust</a> and built on top of <a href="https://github.com/bolcom/libunftp">libunftp</a> and the <a href="https://tokio.rs">Tokio</a> asynchronous run-time. It is <strong>un</strong>like your normal FTP server in that it provides:</p>
 <ul>
-<li><a href="/unFTP/unFTP/server/installation">Installation</a></li>
+<li>Configurable Authentication (e.g. Anonymous, <a href="https://en.wikipedia.org/wiki/Linux_PAM">PAM</a> or a JSON file).</li>
+<li>Configurable storage back-ends (e.g. <a href="https://cloud.google.com/storage/">GCS</a> or filesystem)</li>
+<li>An HTTP server with health endpoints for use for example in Kubernetes for readiness and liveness probes.</li>
+<li>Integration with <a href="https://prometheus.io">Prometheus</a> for monitoring.</li>
+<li>A proxy protocol mode for use behind proxies like HA Proxy and Nginx.</li>
+<li>Structured logging and the ability to ship logs to a Redis instance.</li>
 </ul>
+<p>With unFTP, you can present RFC compliant FTP(S) to the outside world while freeing yourself to use modern APIs and 
+techniques on the inside of your perimeter.</p>
 
             </div>
             <div class='sidebar-right'>
                 <div class='page-nav' id='page-nav'>
                     <p class='page-nav-header'>On this page</p>
                     <ul>
-                        
-                        <li class='page-nav-level-1'>
-                            <a href='#index-of-server'>Index of server</a>
-                        </li>
-                        
-                        <li class='page-nav-level-2'>
-                            <a href='#pages'>Pages</a>
-                        </li>
                         
                     </ul>
                 </div>
@@ -184,11 +177,11 @@
             </div>
         </div>
     </div>
-    <script type="text/javascript" src="/unFTP/assets/katex.js?v=1643401370"></script>
-    <script type="text/javascript" src="/unFTP/assets/mermaid.js?v=1643401370"></script>
-    <script type="text/javascript" src="/unFTP/assets/elasticlunr.js?v=1643401370"></script>
-    <script type="text/javascript" src="/unFTP/assets/prism.js?v=1643401370"></script>
-    <script type="text/javascript" src="/unFTP/assets/doctave-app.js?v=1643401370"></script>
+    <script type="text/javascript" src="/unFTP/assets/katex.js?v=1643405759"></script>
+    <script type="text/javascript" src="/unFTP/assets/mermaid.js?v=1643405759"></script>
+    <script type="text/javascript" src="/unFTP/assets/elasticlunr.js?v=1643405759"></script>
+    <script type="text/javascript" src="/unFTP/assets/prism.js?v=1643405759"></script>
+    <script type="text/javascript" src="/unFTP/assets/doctave-app.js?v=1643405759"></script>
 
     
 </body>

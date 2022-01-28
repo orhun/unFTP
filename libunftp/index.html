@@ -13,16 +13,16 @@
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Source+Sans+Pro:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&display=swap"
         rel="stylesheet">
 
-    <link rel="stylesheet" type="text/css" href="/unFTP/assets/normalize.css?v=1643401370"
+    <link rel="stylesheet" type="text/css" href="/unFTP/assets/normalize.css?v=1643405759"
         media="screen" />
-    <link rel="stylesheet" type="text/css" href="/unFTP/assets/doctave-style.css?v=1643401370"
+    <link rel="stylesheet" type="text/css" href="/unFTP/assets/doctave-style.css?v=1643405759"
         media="screen" />
-    <link rel="stylesheet" type="text/css" href="/unFTP/assets/katex.css?v=1643401370" media="screen" />
-    <link rel="stylesheet" type="text/css" href="/unFTP/assets/prism-ghcolors.css?v=1643401370"
+    <link rel="stylesheet" type="text/css" href="/unFTP/assets/katex.css?v=1643405759" media="screen" />
+    <link rel="stylesheet" type="text/css" href="/unFTP/assets/prism-ghcolors.css?v=1643405759"
         media="screen" />
 
     <script>
-        var DOCTAVE_TIMESTAMP = "1643401370";
+        var DOCTAVE_TIMESTAMP = "1643405759";
         var BASE_PATH = "/unFTP/";
         var color = localStorage.getItem('doctave-color')
 
@@ -73,28 +73,17 @@
                 <nav class='site-nav'>
     <ul>
         
-            <li><a href="/unFTP/overview">Overview</a></li>
-            
-        
             <li><a class="active" href="/unFTP/libunftp">libunftp</a></li>
             
-                <ul>
-    
-        <li><a href="/unFTP/libunftp/overview">overview</a></li>
         
-    
-</ul>
-
-            
-        
-            <li><a href="/unFTP/server">server</a></li>
+            <li><a href="/unFTP/server">unFTP Server</a></li>
             
                 <ul>
     
         <li><a href="/unFTP/server/installation">Installation</a></li>
         
     
-        <li><a href="/unFTP/server/usage">usage</a></li>
+        <li><a href="/unFTP/server/usage">Usage</a></li>
         
             <ul>
     
@@ -127,7 +116,10 @@
 
             
         
-            <li><a href="/unFTP/support">support</a></li>
+            <li><a href="/unFTP/support">Support</a></li>
+            
+        
+            <li><a href="/unFTP/licensing">Licensing</a></li>
             
         
     </ul>
@@ -144,26 +136,42 @@
 
             </div>
             <div class='doctave-content'>
-                <h1 id="index-of-libunftp">Index of libunftp</h1>
-<p>This page was generated automatically by Doctave, because the directory <code>docs/libunftp</code> did not contain an index <code>README.md</code> file. You can customize this page by creating one yourself.</p>
-<h2 id="pages">Pages</h2>
+                <p>libunftp is a <a href="https://www.rust-lang.org/">Rust</a> crate that you can use to build your own FTPS server with. You can 
+extend it with your own storage back-ends or authentication backends.</p>
+<p>It runs on top of the <a href="https://tokio.rs">Tokio</a> asynchronous run-time and tries to make use of Async IO as much as
+possible.</p>
+<p>Feature highlights:</p>
 <ul>
-<li><a href="/unFTP/unFTP/libunftp/overview">overview</a></li>
+<li>39 Supported FTP commands and growing</li>
+<li>Ability to implement own storage back-ends</li>
+<li>Ability to implement own authentication back-ends</li>
+<li>Explicit FTPS (TLS)</li>
+<li>Mutual TLS (Client certificates)</li>
+<li>TLS session resumption</li>
+<li>Prometheus integration</li>
+<li>Structured Logging</li>
+<li><a href="https://www.haproxy.com/blog/haproxy/proxy-protocol/">Proxy Protocol</a> support</li>
+<li>Automatic session timeouts</li>
+<li>Per user IP allow lists</li>
 </ul>
+<p>Known storage back-ends:</p>
+<ul>
+<li><a href="https://crates.io/crates/unftp-sbe-fs">unftp-sbe-fs</a> - Stores files on the local filesystem</li>
+<li><a href="https://crates.io/crates/unftp-sbe-gcs">unftp-sbe-gcs</a> - Stores files in Google Cloud Storage</li>
+</ul>
+<p>Known authentication back-ends:</p>
+<ul>
+<li><a href="https://crates.io/crates/unftp-auth-jsonfile">unftp-auth-jsonfile</a> - Authenticates against JSON text.</li>
+<li><a href="https://crates.io/crates/unftp-auth-pam">unftp-auth-pam</a> - Authenticates via <a href="https://en.wikipedia.org/wiki/Linux_PAM">PAM</a>.</li>
+<li><a href="https://crates.io/crates/unftp-auth-rest">unftp-auth-rest</a> - Consumes an HTTP API to authenticate.</li>
+</ul>
+<p>See the <a href="https://github.com/bolcom/libunftp">github page</a> for more details.</p>
 
             </div>
             <div class='sidebar-right'>
                 <div class='page-nav' id='page-nav'>
                     <p class='page-nav-header'>On this page</p>
                     <ul>
-                        
-                        <li class='page-nav-level-1'>
-                            <a href='#index-of-libunftp'>Index of libunftp</a>
-                        </li>
-                        
-                        <li class='page-nav-level-2'>
-                            <a href='#pages'>Pages</a>
-                        </li>
                         
                     </ul>
                 </div>
@@ -184,11 +192,11 @@
             </div>
         </div>
     </div>
-    <script type="text/javascript" src="/unFTP/assets/katex.js?v=1643401370"></script>
-    <script type="text/javascript" src="/unFTP/assets/mermaid.js?v=1643401370"></script>
-    <script type="text/javascript" src="/unFTP/assets/elasticlunr.js?v=1643401370"></script>
-    <script type="text/javascript" src="/unFTP/assets/prism.js?v=1643401370"></script>
-    <script type="text/javascript" src="/unFTP/assets/doctave-app.js?v=1643401370"></script>
+    <script type="text/javascript" src="/unFTP/assets/katex.js?v=1643405759"></script>
+    <script type="text/javascript" src="/unFTP/assets/mermaid.js?v=1643405759"></script>
+    <script type="text/javascript" src="/unFTP/assets/elasticlunr.js?v=1643405759"></script>
+    <script type="text/javascript" src="/unFTP/assets/prism.js?v=1643405759"></script>
+    <script type="text/javascript" src="/unFTP/assets/doctave-app.js?v=1643405759"></script>
 
     
 </body>
