@@ -13,16 +13,16 @@
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Source+Sans+Pro:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&display=swap"
         rel="stylesheet">
 
-    <link rel="stylesheet" type="text/css" href="/unFTP/assets/normalize.css?v=1643409082"
+    <link rel="stylesheet" type="text/css" href="/unFTP/assets/normalize.css?v=1643409581"
         media="screen" />
-    <link rel="stylesheet" type="text/css" href="/unFTP/assets/doctave-style.css?v=1643409082"
+    <link rel="stylesheet" type="text/css" href="/unFTP/assets/doctave-style.css?v=1643409581"
         media="screen" />
-    <link rel="stylesheet" type="text/css" href="/unFTP/assets/katex.css?v=1643409082" media="screen" />
-    <link rel="stylesheet" type="text/css" href="/unFTP/assets/prism-ghcolors.css?v=1643409082"
+    <link rel="stylesheet" type="text/css" href="/unFTP/assets/katex.css?v=1643409581" media="screen" />
+    <link rel="stylesheet" type="text/css" href="/unFTP/assets/prism-ghcolors.css?v=1643409581"
         media="screen" />
 
     <script>
-        var DOCTAVE_TIMESTAMP = "1643409082";
+        var DOCTAVE_TIMESTAMP = "1643409581";
         var BASE_PATH = "/unFTP/";
         var color = localStorage.getItem('doctave-color')
 
@@ -136,8 +136,7 @@
 
             </div>
             <div class='doctave-content'>
-                <h1 id="json-file-authenticator">JSON File Authenticator</h1>
-<p>Authenticate with credentials stored in a JSON file:</p>
+                <h2 id="authentication-setup">Authentication setup</h2>
 <p>Create a credentials file (e.g. credentials.json):</p>
 <pre><code class="language-json">[
   {
@@ -154,61 +153,8 @@
     --auth-type=json \
     --auth-json-path=credentials.json
 </code></pre>
-<p>Require Mutual TLS:</p>
-<pre><code class="language-sh"># Create Server Root Key and Certificate
-openssl genrsa -out unftp_client_ca.key 2048
-openssl req -new -x509 -days 365 \
-	-key unftp_client_ca.key \
-        -subj '/CN=unftp-ca.mysite.com/O=bol.com/C=NL' \
-	-out unftp_client_ca.crt
-
-# Create a client side key
-openssl genrsa -out client.key 2048
-
-# Create a client side certificate signing request (CSR)
-openssl req -new -sha256 \
-    -key client.key \
-    -subj '/CN=unftp-client.mysite.com/O=bol.com/C=NL' \
-    -reqexts SAN \
-    -config &lt;(cat /etc/ssl/openssl.cnf \
-        &lt;(printf "\n[SAN]\nsubjectAltName=DNS:localhost")) \
-    -out client.csr
-
-# Sign the certificate with our own CA
-openssl x509 -req \
-  -in client.csr \
-  -CA unftp_client_ca.crt \
-  -CAkey unftp_client_ca.key \
-  -CAcreateserial \
-  -extfile &lt;(printf "subjectAltName=DNS:localhost") \
-  -out client.crt \
-  -days 1024 \
-  -sha256
-  
-# Run unFTP pointing to the CA cert
-unftp \
-  --root-dir=/home/unftp/data \
-  --ftps-certs-file=/home/unftp/unftp.crt \
-  --ftps-key-file=/home/unftp/unftp.key \
-  --ftps-required-on-control-channel=all \
-  --ftps-client-auth=require \
-  --ftps-trust-store=/Users/xxx/unftp/unftp_client_ca.crt
-  
-# From another terminal: Connect with CURL, sending the client certificate
-curl -v \
-  --insecure \
-  --user 'test:test' \
-  --ftp-ssl --ssl-reqd \
-  --ftp-pasv --disable-epsv \
-  --cacert unftp_client_ca.crt \
-  --cert client.crt \
-  --key client.key \
-  --cert-type PEM \
-  --pass '' \
-  --tlsv1.2 \
-  ftp://localhost:2121/  
-</code></pre>
-<p>To do per-user settings you can expand the above mentioned JSON file to also include some per user settings:</p>
+<h2 id="per-user-settings">Per-User Settings</h2>
+<p>To do per-user settings you can expand the above-mentioned JSON file to also include some per user settings:</p>
 <pre><code class="language-json">[
   {
     "username": "alice",
@@ -260,8 +206,12 @@ login when providing a valid certificate.</li>
                     <p class='page-nav-header'>On this page</p>
                     <ul>
                         
-                        <li class='page-nav-level-1'>
-                            <a href='#json-file-authenticator'>JSON File Authenticator</a>
+                        <li class='page-nav-level-2'>
+                            <a href='#authentication-setup'>Authentication setup</a>
+                        </li>
+                        
+                        <li class='page-nav-level-2'>
+                            <a href='#per-user-settings'>Per-User Settings</a>
                         </li>
                         
                     </ul>
@@ -283,11 +233,11 @@ login when providing a valid certificate.</li>
             </div>
         </div>
     </div>
-    <script type="text/javascript" src="/unFTP/assets/katex.js?v=1643409082"></script>
-    <script type="text/javascript" src="/unFTP/assets/mermaid.js?v=1643409082"></script>
-    <script type="text/javascript" src="/unFTP/assets/elasticlunr.js?v=1643409082"></script>
-    <script type="text/javascript" src="/unFTP/assets/prism.js?v=1643409082"></script>
-    <script type="text/javascript" src="/unFTP/assets/doctave-app.js?v=1643409082"></script>
+    <script type="text/javascript" src="/unFTP/assets/katex.js?v=1643409581"></script>
+    <script type="text/javascript" src="/unFTP/assets/mermaid.js?v=1643409581"></script>
+    <script type="text/javascript" src="/unFTP/assets/elasticlunr.js?v=1643409581"></script>
+    <script type="text/javascript" src="/unFTP/assets/prism.js?v=1643409581"></script>
+    <script type="text/javascript" src="/unFTP/assets/doctave-app.js?v=1643409581"></script>
 
     
 </body>
