@@ -5,7 +5,7 @@
 <head>
     <meta charset="utf-8">
 
-    <title>The GCS BE</title>
+    <title>Monitoring</title>
     <meta name="description" content="Documentation for unFTP">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -13,16 +13,16 @@
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Source+Sans+Pro:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&display=swap"
         rel="stylesheet">
 
-    <link rel="stylesheet" type="text/css" href="/unFTP/assets/normalize.css?v=1643409581"
+    <link rel="stylesheet" type="text/css" href="/unFTP/assets/normalize.css?v=1643458278"
         media="screen" />
-    <link rel="stylesheet" type="text/css" href="/unFTP/assets/doctave-style.css?v=1643409581"
+    <link rel="stylesheet" type="text/css" href="/unFTP/assets/doctave-style.css?v=1643458278"
         media="screen" />
-    <link rel="stylesheet" type="text/css" href="/unFTP/assets/katex.css?v=1643409581" media="screen" />
-    <link rel="stylesheet" type="text/css" href="/unFTP/assets/prism-ghcolors.css?v=1643409581"
+    <link rel="stylesheet" type="text/css" href="/unFTP/assets/katex.css?v=1643458278" media="screen" />
+    <link rel="stylesheet" type="text/css" href="/unFTP/assets/prism-ghcolors.css?v=1643458278"
         media="screen" />
 
     <script>
-        var DOCTAVE_TIMESTAMP = "1643409581";
+        var DOCTAVE_TIMESTAMP = "1643458278";
         var BASE_PATH = "/unFTP/";
         var color = localStorage.getItem('doctave-color')
 
@@ -83,33 +83,28 @@
         <li><a href="/unFTP/server/installation">Installation</a></li>
         
     
-        <li><a href="/unFTP/server/usage">Usage</a></li>
-        
-            <ul>
-    
-        <li><a href="/unFTP/server/usage/starting">Getting Started</a></li>
+        <li><a href="/unFTP/server/starting">unFTP Up</a></li>
         
     
-        <li><a href="/unFTP/server/usage/ftps">Enabling TLS</a></li>
+        <li><a href="/unFTP/server/logging">Logging</a></li>
         
     
-        <li><a href="/unFTP/server/usage/monitoring">Monitoring</a></li>
+        <li><a class="active" href="/unFTP/server/monitoring">Monitoring</a></li>
         
     
-        <li><a class="active" href="/unFTP/server/usage/gcs">The GCS BE</a></li>
+        <li><a href="/unFTP/server/ftps">Enabling TLS</a></li>
         
     
-        <li><a href="/unFTP/server/usage/jsonconfig">JSON Configuration</a></li>
+        <li><a href="/unFTP/server/gcs">The GCS BE</a></li>
         
     
-        <li><a href="/unFTP/server/usage/proxy-protocol">Proxy Protocol</a></li>
+        <li><a href="/unFTP/server/jsonconfig">JSON Configuration</a></li>
         
     
-        <li><a href="/unFTP/server/usage/docker">Docker</a></li>
+        <li><a href="/unFTP/server/proxy-protocol">Proxy Protocol</a></li>
         
     
-</ul>
-
+        <li><a href="/unFTP/server/docker">Docker</a></li>
         
     
 </ul>
@@ -136,13 +131,17 @@
 
             </div>
             <div class='doctave-content'>
-                <h1 id="using-the-gcs-back-end">Using the GCS Back-end</h1>
-<p>Run with the GCS (Google Cloud Storage) back-end:</p>
+                <h1 id="monitoring-with-prometheus">Monitoring with Prometheus</h1>
+<p>To allow your <a href="https://prometheus.io">Prometheus</a> instance to scrape metrics from unFTP you have to enable unFTP's HTTP
+interface. This is done by specifying an HTTP bind address with the <code>--bind-address-http</code> argument or the 
+<code>UNFTP_BIND_ADDRESS_HTTP</code> environment variable. For example if you do:</p>
 <pre><code class="language-sh">unftp \
-  --sbe-type=gcs \
-  --sbe-gcs-bucket=mybucket \
-  --sbe-gcs-key-file=file
+  --bind-address=0.0.0.0:2121 \
+  --bind-address-http=0.0.0.0:8080 \
+  --root-dir=/home/unftp/data
 </code></pre>
+<p>Your will have Prometheus metrics exposed on all IP addresses and port 8080 at endpoint <code>http://../metrics</code>. </p>
+<p>Doing this will also expose an unFTP service information page at the HTTP root path.</p>
 
             </div>
             <div class='sidebar-right'>
@@ -151,7 +150,7 @@
                     <ul>
                         
                         <li class='page-nav-level-1'>
-                            <a href='#using-the-gcs-back-end'>Using the GCS Back-end</a>
+                            <a href='#monitoring-with-prometheus'>Monitoring with Prometheus</a>
                         </li>
                         
                     </ul>
@@ -173,11 +172,11 @@
             </div>
         </div>
     </div>
-    <script type="text/javascript" src="/unFTP/assets/katex.js?v=1643409581"></script>
-    <script type="text/javascript" src="/unFTP/assets/mermaid.js?v=1643409581"></script>
-    <script type="text/javascript" src="/unFTP/assets/elasticlunr.js?v=1643409581"></script>
-    <script type="text/javascript" src="/unFTP/assets/prism.js?v=1643409581"></script>
-    <script type="text/javascript" src="/unFTP/assets/doctave-app.js?v=1643409581"></script>
+    <script type="text/javascript" src="/unFTP/assets/katex.js?v=1643458278"></script>
+    <script type="text/javascript" src="/unFTP/assets/mermaid.js?v=1643458278"></script>
+    <script type="text/javascript" src="/unFTP/assets/elasticlunr.js?v=1643458278"></script>
+    <script type="text/javascript" src="/unFTP/assets/prism.js?v=1643458278"></script>
+    <script type="text/javascript" src="/unFTP/assets/doctave-app.js?v=1643458278"></script>
 
     
 </body>

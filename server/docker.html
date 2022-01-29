@@ -5,7 +5,7 @@
 <head>
     <meta charset="utf-8">
 
-    <title>Usage</title>
+    <title>Docker</title>
     <meta name="description" content="Documentation for unFTP">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -13,16 +13,16 @@
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Source+Sans+Pro:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&display=swap"
         rel="stylesheet">
 
-    <link rel="stylesheet" type="text/css" href="/unFTP/assets/normalize.css?v=1643409581"
+    <link rel="stylesheet" type="text/css" href="/unFTP/assets/normalize.css?v=1643458278"
         media="screen" />
-    <link rel="stylesheet" type="text/css" href="/unFTP/assets/doctave-style.css?v=1643409581"
+    <link rel="stylesheet" type="text/css" href="/unFTP/assets/doctave-style.css?v=1643458278"
         media="screen" />
-    <link rel="stylesheet" type="text/css" href="/unFTP/assets/katex.css?v=1643409581" media="screen" />
-    <link rel="stylesheet" type="text/css" href="/unFTP/assets/prism-ghcolors.css?v=1643409581"
+    <link rel="stylesheet" type="text/css" href="/unFTP/assets/katex.css?v=1643458278" media="screen" />
+    <link rel="stylesheet" type="text/css" href="/unFTP/assets/prism-ghcolors.css?v=1643458278"
         media="screen" />
 
     <script>
-        var DOCTAVE_TIMESTAMP = "1643409581";
+        var DOCTAVE_TIMESTAMP = "1643458278";
         var BASE_PATH = "/unFTP/";
         var color = localStorage.getItem('doctave-color')
 
@@ -83,33 +83,28 @@
         <li><a href="/unFTP/server/installation">Installation</a></li>
         
     
-        <li><a class="active" href="/unFTP/server/usage">Usage</a></li>
-        
-            <ul>
-    
-        <li><a href="/unFTP/server/usage/starting">Getting Started</a></li>
+        <li><a href="/unFTP/server/starting">unFTP Up</a></li>
         
     
-        <li><a href="/unFTP/server/usage/ftps">Enabling TLS</a></li>
+        <li><a href="/unFTP/server/logging">Logging</a></li>
         
     
-        <li><a href="/unFTP/server/usage/monitoring">Monitoring</a></li>
+        <li><a href="/unFTP/server/monitoring">Monitoring</a></li>
         
     
-        <li><a href="/unFTP/server/usage/gcs">The GCS BE</a></li>
+        <li><a href="/unFTP/server/ftps">Enabling TLS</a></li>
         
     
-        <li><a href="/unFTP/server/usage/jsonconfig">JSON Configuration</a></li>
+        <li><a href="/unFTP/server/gcs">The GCS BE</a></li>
         
     
-        <li><a href="/unFTP/server/usage/proxy-protocol">Proxy Protocol</a></li>
+        <li><a href="/unFTP/server/jsonconfig">JSON Configuration</a></li>
         
     
-        <li><a href="/unFTP/server/usage/docker">Docker</a></li>
+        <li><a href="/unFTP/server/proxy-protocol">Proxy Protocol</a></li>
         
     
-</ul>
-
+        <li><a class="active" href="/unFTP/server/docker">Docker</a></li>
         
     
 </ul>
@@ -136,10 +131,29 @@
 
             </div>
             <div class='doctave-content'>
-                <h1 id="usage">Usage</h1>
-<p>Arguments can be given to unFTP either via the command line or via environment variables. To show a list of available
-program arguments type the following:</p>
-<pre><code class="language-sh">unftp --help
+                <p>Example running unFTP in a Docker container:</p>
+<pre><code class="language-sh">docker run \
+  -e ROOT_DIR=/ \
+  -e UNFTP_LOG_LEVEL=info \
+  -e UNFTP_FTPS_CERTS_FILE='/unftp.crt' \
+  -e UNFTP_FTPS_KEY_FILE='/unftp.key' \
+  -e UNFTP_PASSIVE_PORTS=50000-50005 \
+  -e UNFTP_SBE_TYPE=gcs \
+  -e UNFTP_SBE_GCS_BUCKET=the-bucket-name \
+  -e UNFTP_SBE_GCS_KEY_FILE=/key.json \
+  -p 2121:2121 \
+  -p 50000:50000 \
+  -p 50001:50001 \
+  -p 50002:50002 \
+  -p 50003:50003 \
+  -p 50004:50004 \
+  -p 50005:50005 \
+  -p 8080:8080 \
+  -v /Users/xxx/unftp/unftp.key:/unftp.key  \
+  -v /Users/xxx/unftp/unftp.crt:/unftp.crt \
+  -v /Users/xxx/unftp/the-key.json:/key.json \
+  -ti \
+  bolcom/unftp:v0.13.0-alpine
 </code></pre>
 
             </div>
@@ -147,10 +161,6 @@ program arguments type the following:</p>
                 <div class='page-nav' id='page-nav'>
                     <p class='page-nav-header'>On this page</p>
                     <ul>
-                        
-                        <li class='page-nav-level-1'>
-                            <a href='#usage'>Usage</a>
-                        </li>
                         
                     </ul>
                 </div>
@@ -171,11 +181,11 @@ program arguments type the following:</p>
             </div>
         </div>
     </div>
-    <script type="text/javascript" src="/unFTP/assets/katex.js?v=1643409581"></script>
-    <script type="text/javascript" src="/unFTP/assets/mermaid.js?v=1643409581"></script>
-    <script type="text/javascript" src="/unFTP/assets/elasticlunr.js?v=1643409581"></script>
-    <script type="text/javascript" src="/unFTP/assets/prism.js?v=1643409581"></script>
-    <script type="text/javascript" src="/unFTP/assets/doctave-app.js?v=1643409581"></script>
+    <script type="text/javascript" src="/unFTP/assets/katex.js?v=1643458278"></script>
+    <script type="text/javascript" src="/unFTP/assets/mermaid.js?v=1643458278"></script>
+    <script type="text/javascript" src="/unFTP/assets/elasticlunr.js?v=1643458278"></script>
+    <script type="text/javascript" src="/unFTP/assets/prism.js?v=1643458278"></script>
+    <script type="text/javascript" src="/unFTP/assets/doctave-app.js?v=1643458278"></script>
 
     
 </body>

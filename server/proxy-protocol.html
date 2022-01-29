@@ -5,7 +5,7 @@
 <head>
     <meta charset="utf-8">
 
-    <title>Enabling TLS</title>
+    <title>Proxy Protocol</title>
     <meta name="description" content="Documentation for unFTP">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -13,16 +13,16 @@
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Source+Sans+Pro:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&display=swap"
         rel="stylesheet">
 
-    <link rel="stylesheet" type="text/css" href="/unFTP/assets/normalize.css?v=1643409581"
+    <link rel="stylesheet" type="text/css" href="/unFTP/assets/normalize.css?v=1643458278"
         media="screen" />
-    <link rel="stylesheet" type="text/css" href="/unFTP/assets/doctave-style.css?v=1643409581"
+    <link rel="stylesheet" type="text/css" href="/unFTP/assets/doctave-style.css?v=1643458278"
         media="screen" />
-    <link rel="stylesheet" type="text/css" href="/unFTP/assets/katex.css?v=1643409581" media="screen" />
-    <link rel="stylesheet" type="text/css" href="/unFTP/assets/prism-ghcolors.css?v=1643409581"
+    <link rel="stylesheet" type="text/css" href="/unFTP/assets/katex.css?v=1643458278" media="screen" />
+    <link rel="stylesheet" type="text/css" href="/unFTP/assets/prism-ghcolors.css?v=1643458278"
         media="screen" />
 
     <script>
-        var DOCTAVE_TIMESTAMP = "1643409581";
+        var DOCTAVE_TIMESTAMP = "1643458278";
         var BASE_PATH = "/unFTP/";
         var color = localStorage.getItem('doctave-color')
 
@@ -83,33 +83,28 @@
         <li><a href="/unFTP/server/installation">Installation</a></li>
         
     
-        <li><a href="/unFTP/server/usage">Usage</a></li>
-        
-            <ul>
-    
-        <li><a href="/unFTP/server/usage/starting">Getting Started</a></li>
+        <li><a href="/unFTP/server/starting">unFTP Up</a></li>
         
     
-        <li><a class="active" href="/unFTP/server/usage/ftps">Enabling TLS</a></li>
+        <li><a href="/unFTP/server/logging">Logging</a></li>
         
     
-        <li><a href="/unFTP/server/usage/monitoring">Monitoring</a></li>
+        <li><a href="/unFTP/server/monitoring">Monitoring</a></li>
         
     
-        <li><a href="/unFTP/server/usage/gcs">The GCS BE</a></li>
+        <li><a href="/unFTP/server/ftps">Enabling TLS</a></li>
         
     
-        <li><a href="/unFTP/server/usage/jsonconfig">JSON Configuration</a></li>
+        <li><a href="/unFTP/server/gcs">The GCS BE</a></li>
         
     
-        <li><a href="/unFTP/server/usage/proxy-protocol">Proxy Protocol</a></li>
+        <li><a href="/unFTP/server/jsonconfig">JSON Configuration</a></li>
         
     
-        <li><a href="/unFTP/server/usage/docker">Docker</a></li>
+        <li><a class="active" href="/unFTP/server/proxy-protocol">Proxy Protocol</a></li>
         
     
-</ul>
-
+        <li><a href="/unFTP/server/docker">Docker</a></li>
         
     
 </ul>
@@ -136,78 +131,10 @@
 
             </div>
             <div class='doctave-content'>
-                <p>Start by generating a self signed certificate</p>
-<pre><code class="language-sh">openssl req \
-   -x509 \
-   -newkey rsa:2048 \
-   -nodes \
-   -keyout unftp.key \
-   -out unftp.crt \
-   -days 3650 \
-   -subj '/CN=www.myunftp.domain/O=My Company Name LTD./C=NL'
-</code></pre>
-<p>The run unFTP, pointing it to the certificate and key. You can use the <code>--ftps-required-on-control-channel</code> setting to enforce TLS on the FTP control channgel. In other words an FTP client will only be allowed to use FTP commands if it upgrades to a private TLS connection.</p>
-<pre><code class="language-sh">./unftp \
-  --root-dir=/home/unftp/data \
-  --ftps-certs-file=/home/unftp/unftp.crt \
-  --ftps-key-file=/home/unftp/unftp.key \
-  --ftps-required-on-control-channel=all
-
-</code></pre>
-<h2 id="setting-up-mutual-tls">Setting up Mutual TLS</h2>
-<p>Require Mutual TLS:</p>
-<pre><code class="language-sh"># Create Server Root Key and Certificate
-openssl genrsa -out unftp_client_ca.key 2048
-openssl req -new -x509 -days 365 \
-	-key unftp_client_ca.key \
-        -subj '/CN=unftp-ca.mysite.com/O=bol.com/C=NL' \
-	-out unftp_client_ca.crt
-
-# Create a client side key
-openssl genrsa -out client.key 2048
-
-# Create a client side certificate signing request (CSR)
-openssl req -new -sha256 \
-    -key client.key \
-    -subj '/CN=unftp-client.mysite.com/O=bol.com/C=NL' \
-    -reqexts SAN \
-    -config &lt;(cat /etc/ssl/openssl.cnf \
-        &lt;(printf "\n[SAN]\nsubjectAltName=DNS:localhost")) \
-    -out client.csr
-
-# Sign the certificate with our own CA
-openssl x509 -req \
-  -in client.csr \
-  -CA unftp_client_ca.crt \
-  -CAkey unftp_client_ca.key \
-  -CAcreateserial \
-  -extfile &lt;(printf "subjectAltName=DNS:localhost") \
-  -out client.crt \
-  -days 1024 \
-  -sha256
-  
-# Run unFTP pointing to the CA cert
-unftp \
-  --root-dir=/home/unftp/data \
-  --ftps-certs-file=/home/unftp/unftp.crt \
-  --ftps-key-file=/home/unftp/unftp.key \
-  --ftps-required-on-control-channel=all \
-  --ftps-client-auth=require \
-  --ftps-trust-store=/Users/xxx/unftp/unftp_client_ca.crt
-  
-# From another terminal: Connect with CURL, sending the client certificate
-curl -v \
-  --insecure \
-  --user 'test:test' \
-  --ftp-ssl --ssl-reqd \
-  --ftp-pasv --disable-epsv \
-  --cacert unftp_client_ca.crt \
-  --cert client.crt \
-  --key client.key \
-  --cert-type PEM \
-  --pass '' \
-  --tlsv1.2 \
-  ftp://localhost:2121/  
+                <h1 id="proxy-protocol-support">Proxy Protocol Support</h1>
+<p>Run behind a proxy in <a href="https://www.haproxy.com/blog/haproxy/proxy-protocol/">proxy protocol</a> mode:</p>
+<pre><code class="language-sh">unftp \
+    --proxy-external-control-port=2121
 </code></pre>
 
             </div>
@@ -216,8 +143,8 @@ curl -v \
                     <p class='page-nav-header'>On this page</p>
                     <ul>
                         
-                        <li class='page-nav-level-2'>
-                            <a href='#setting-up-mutual-tls'>Setting up Mutual TLS</a>
+                        <li class='page-nav-level-1'>
+                            <a href='#proxy-protocol-support'>Proxy Protocol Support</a>
                         </li>
                         
                     </ul>
@@ -239,11 +166,11 @@ curl -v \
             </div>
         </div>
     </div>
-    <script type="text/javascript" src="/unFTP/assets/katex.js?v=1643409581"></script>
-    <script type="text/javascript" src="/unFTP/assets/mermaid.js?v=1643409581"></script>
-    <script type="text/javascript" src="/unFTP/assets/elasticlunr.js?v=1643409581"></script>
-    <script type="text/javascript" src="/unFTP/assets/prism.js?v=1643409581"></script>
-    <script type="text/javascript" src="/unFTP/assets/doctave-app.js?v=1643409581"></script>
+    <script type="text/javascript" src="/unFTP/assets/katex.js?v=1643458278"></script>
+    <script type="text/javascript" src="/unFTP/assets/mermaid.js?v=1643458278"></script>
+    <script type="text/javascript" src="/unFTP/assets/elasticlunr.js?v=1643458278"></script>
+    <script type="text/javascript" src="/unFTP/assets/prism.js?v=1643458278"></script>
+    <script type="text/javascript" src="/unFTP/assets/doctave-app.js?v=1643458278"></script>
 
     
 </body>

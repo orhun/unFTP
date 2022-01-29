@@ -5,7 +5,7 @@
 <head>
     <meta charset="utf-8">
 
-    <title>Docker</title>
+    <title>Enabling TLS</title>
     <meta name="description" content="Documentation for unFTP">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -13,16 +13,16 @@
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Source+Sans+Pro:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&display=swap"
         rel="stylesheet">
 
-    <link rel="stylesheet" type="text/css" href="/unFTP/assets/normalize.css?v=1643409581"
+    <link rel="stylesheet" type="text/css" href="/unFTP/assets/normalize.css?v=1643458278"
         media="screen" />
-    <link rel="stylesheet" type="text/css" href="/unFTP/assets/doctave-style.css?v=1643409581"
+    <link rel="stylesheet" type="text/css" href="/unFTP/assets/doctave-style.css?v=1643458278"
         media="screen" />
-    <link rel="stylesheet" type="text/css" href="/unFTP/assets/katex.css?v=1643409581" media="screen" />
-    <link rel="stylesheet" type="text/css" href="/unFTP/assets/prism-ghcolors.css?v=1643409581"
+    <link rel="stylesheet" type="text/css" href="/unFTP/assets/katex.css?v=1643458278" media="screen" />
+    <link rel="stylesheet" type="text/css" href="/unFTP/assets/prism-ghcolors.css?v=1643458278"
         media="screen" />
 
     <script>
-        var DOCTAVE_TIMESTAMP = "1643409581";
+        var DOCTAVE_TIMESTAMP = "1643458278";
         var BASE_PATH = "/unFTP/";
         var color = localStorage.getItem('doctave-color')
 
@@ -83,33 +83,28 @@
         <li><a href="/unFTP/server/installation">Installation</a></li>
         
     
-        <li><a href="/unFTP/server/usage">Usage</a></li>
-        
-            <ul>
-    
-        <li><a href="/unFTP/server/usage/starting">Getting Started</a></li>
+        <li><a href="/unFTP/server/starting">unFTP Up</a></li>
         
     
-        <li><a href="/unFTP/server/usage/ftps">Enabling TLS</a></li>
+        <li><a href="/unFTP/server/logging">Logging</a></li>
         
     
-        <li><a href="/unFTP/server/usage/monitoring">Monitoring</a></li>
+        <li><a href="/unFTP/server/monitoring">Monitoring</a></li>
         
     
-        <li><a href="/unFTP/server/usage/gcs">The GCS BE</a></li>
+        <li><a class="active" href="/unFTP/server/ftps">Enabling TLS</a></li>
         
     
-        <li><a href="/unFTP/server/usage/jsonconfig">JSON Configuration</a></li>
+        <li><a href="/unFTP/server/gcs">The GCS BE</a></li>
         
     
-        <li><a href="/unFTP/server/usage/proxy-protocol">Proxy Protocol</a></li>
+        <li><a href="/unFTP/server/jsonconfig">JSON Configuration</a></li>
         
     
-        <li><a class="active" href="/unFTP/server/usage/docker">Docker</a></li>
+        <li><a href="/unFTP/server/proxy-protocol">Proxy Protocol</a></li>
         
     
-</ul>
-
+        <li><a href="/unFTP/server/docker">Docker</a></li>
         
     
 </ul>
@@ -136,29 +131,77 @@
 
             </div>
             <div class='doctave-content'>
-                <p>Example running unFTP in a Docker container:</p>
-<pre><code class="language-sh">docker run \
-  -e ROOT_DIR=/ \
-  -e UNFTP_LOG_LEVEL=info \
-  -e UNFTP_FTPS_CERTS_FILE='/unftp.crt' \
-  -e UNFTP_FTPS_KEY_FILE='/unftp.key' \
-  -e UNFTP_PASSIVE_PORTS=50000-50005 \
-  -e UNFTP_SBE_TYPE=gcs \
-  -e UNFTP_SBE_GCS_BUCKET=the-bucket-name \
-  -e UNFTP_SBE_GCS_KEY_FILE=/key.json \
-  -p 2121:2121 \
-  -p 50000:50000 \
-  -p 50001:50001 \
-  -p 50002:50002 \
-  -p 50003:50003 \
-  -p 50004:50004 \
-  -p 50005:50005 \
-  -p 8080:8080 \
-  -v /Users/xxx/unftp/unftp.key:/unftp.key  \
-  -v /Users/xxx/unftp/unftp.crt:/unftp.crt \
-  -v /Users/xxx/unftp/the-key.json:/key.json \
-  -ti \
-  bolcom/unftp:v0.13.0-alpine
+                <p>Start by generating a self signed certificate</p>
+<pre><code class="language-sh">openssl req \
+   -x509 \
+   -newkey rsa:2048 \
+   -nodes \
+   -keyout unftp.key \
+   -out unftp.crt \
+   -days 3650 \
+   -subj '/CN=www.myunftp.domain/O=My Company Name LTD./C=NL'
+</code></pre>
+<p>The run unFTP, pointing it to the certificate and key. You can use the <code>--ftps-required-on-control-channel</code> setting to enforce TLS on the FTP control channgel. In other words an FTP client will only be allowed to use FTP commands if it upgrades to a private TLS connection.</p>
+<pre><code class="language-sh">./unftp \
+  --root-dir=/home/unftp/data \
+  --ftps-certs-file=/home/unftp/unftp.crt \
+  --ftps-key-file=/home/unftp/unftp.key \
+  --ftps-required-on-control-channel=all
+
+</code></pre>
+<h2 id="setting-up-mutual-tls">Setting up Mutual TLS</h2>
+<p>Create Server Root Key and Certificate:</p>
+<pre><code class="language-sh">openssl genrsa -out unftp_client_ca.key 2048
+openssl req -new -x509 -days 365 \
+	-key unftp_client_ca.key \
+        -subj '/CN=unftp-ca.mysite.com/O=bol.com/C=NL' \
+	-out unftp_client_ca.crt
+</code></pre>
+<p>Create a client side key:</p>
+<pre><code>openssl genrsa -out client.key 2048
+</code></pre>
+<p>Create a client side certificate signing request (CSR):</p>
+<pre><code>openssl req -new -sha256 \
+    -key client.key \
+    -subj '/CN=unftp-client.mysite.com/O=bol.com/C=NL' \
+    -reqexts SAN \
+    -config &lt;(cat /etc/ssl/openssl.cnf \
+        &lt;(printf "\n[SAN]\nsubjectAltName=DNS:localhost")) \
+    -out client.csr
+</code></pre>
+<p>Sign the certificate with our own CA</p>
+<pre><code>openssl x509 -req \
+  -in client.csr \
+  -CA unftp_client_ca.crt \
+  -CAkey unftp_client_ca.key \
+  -CAcreateserial \
+  -extfile &lt;(printf "subjectAltName=DNS:localhost") \
+  -out client.crt \
+  -days 1024 \
+  -sha256
+</code></pre>
+<p>Run unFTP pointing to the CA cert:</p>
+<pre><code>unftp \
+  --root-dir=/home/unftp/data \
+  --ftps-certs-file=/home/unftp/unftp.crt \
+  --ftps-key-file=/home/unftp/unftp.key \
+  --ftps-required-on-control-channel=all \
+  --ftps-client-auth=require \
+  --ftps-trust-store=/Users/xxx/unftp/unftp_client_ca.crt
+</code></pre>
+<p>From another terminal: Connect with CURL, sending the client certificate:</p>
+<pre><code>curl -v \
+  --insecure \
+  --user 'test:test' \
+  --ftp-ssl --ssl-reqd \
+  --ftp-pasv --disable-epsv \
+  --cacert unftp_client_ca.crt \
+  --cert client.crt \
+  --key client.key \
+  --cert-type PEM \
+  --pass '' \
+  --tlsv1.2 \
+  ftp://localhost:2121/  
 </code></pre>
 
             </div>
@@ -166,6 +209,10 @@
                 <div class='page-nav' id='page-nav'>
                     <p class='page-nav-header'>On this page</p>
                     <ul>
+                        
+                        <li class='page-nav-level-2'>
+                            <a href='#setting-up-mutual-tls'>Setting up Mutual TLS</a>
+                        </li>
                         
                     </ul>
                 </div>
@@ -186,11 +233,11 @@
             </div>
         </div>
     </div>
-    <script type="text/javascript" src="/unFTP/assets/katex.js?v=1643409581"></script>
-    <script type="text/javascript" src="/unFTP/assets/mermaid.js?v=1643409581"></script>
-    <script type="text/javascript" src="/unFTP/assets/elasticlunr.js?v=1643409581"></script>
-    <script type="text/javascript" src="/unFTP/assets/prism.js?v=1643409581"></script>
-    <script type="text/javascript" src="/unFTP/assets/doctave-app.js?v=1643409581"></script>
+    <script type="text/javascript" src="/unFTP/assets/katex.js?v=1643458278"></script>
+    <script type="text/javascript" src="/unFTP/assets/mermaid.js?v=1643458278"></script>
+    <script type="text/javascript" src="/unFTP/assets/elasticlunr.js?v=1643458278"></script>
+    <script type="text/javascript" src="/unFTP/assets/prism.js?v=1643458278"></script>
+    <script type="text/javascript" src="/unFTP/assets/doctave-app.js?v=1643458278"></script>
 
     
 </body>
