@@ -13,16 +13,16 @@
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Source+Sans+Pro:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&display=swap"
         rel="stylesheet">
 
-    <link rel="stylesheet" type="text/css" href="/unFTP/assets/normalize.css?v=1643458278"
+    <link rel="stylesheet" type="text/css" href="/unFTP/assets/normalize.css?v=1643458669"
         media="screen" />
-    <link rel="stylesheet" type="text/css" href="/unFTP/assets/doctave-style.css?v=1643458278"
+    <link rel="stylesheet" type="text/css" href="/unFTP/assets/doctave-style.css?v=1643458669"
         media="screen" />
-    <link rel="stylesheet" type="text/css" href="/unFTP/assets/katex.css?v=1643458278" media="screen" />
-    <link rel="stylesheet" type="text/css" href="/unFTP/assets/prism-ghcolors.css?v=1643458278"
+    <link rel="stylesheet" type="text/css" href="/unFTP/assets/katex.css?v=1643458669" media="screen" />
+    <link rel="stylesheet" type="text/css" href="/unFTP/assets/prism-ghcolors.css?v=1643458669"
         media="screen" />
 
     <script>
-        var DOCTAVE_TIMESTAMP = "1643458278";
+        var DOCTAVE_TIMESTAMP = "1643458669";
         var BASE_PATH = "/unFTP/";
         var color = localStorage.getItem('doctave-color')
 
@@ -156,11 +156,25 @@ module: main
 in JSON format to a <a href="https://redis.io/">Redis</a> instance. With a tool like <a href="https://www.elastic.co/logstash/">Logstash</a>
 this can then be processed further.</p>
 <p>unFTP will use the <a href="https://redis.io/commands/rpush">RPUSH</a> command to append logs at the tail of a list.</p>
-<p>Here is an example of sending logs to a local Redis instance:</p>
+<p>Here is an example of configuring unFTP to send logs to a local Redis instance:</p>
 <pre><code class="language-sh">unftp -v \
   --log-redis-host=localhost \
   --log-redis-port=6379 \
   --log-redis-key=logging 
+</code></pre>
+<p>The format of the JSON messages look like this:</p>
+<pre><code class="language-json"> {
+    "@timestamp": ${timeRFC3339},
+    "@source_host": ${hostname},
+    "@message": ${message},
+    "@fields": {
+       "level": ${levelLowercase},
+       "application": ${appName}
+       ... // logged field 1
+       ... // logged field 2
+       ...
+   }
+}
 </code></pre>
 
             </div>
@@ -192,11 +206,11 @@ this can then be processed further.</p>
             </div>
         </div>
     </div>
-    <script type="text/javascript" src="/unFTP/assets/katex.js?v=1643458278"></script>
-    <script type="text/javascript" src="/unFTP/assets/mermaid.js?v=1643458278"></script>
-    <script type="text/javascript" src="/unFTP/assets/elasticlunr.js?v=1643458278"></script>
-    <script type="text/javascript" src="/unFTP/assets/prism.js?v=1643458278"></script>
-    <script type="text/javascript" src="/unFTP/assets/doctave-app.js?v=1643458278"></script>
+    <script type="text/javascript" src="/unFTP/assets/katex.js?v=1643458669"></script>
+    <script type="text/javascript" src="/unFTP/assets/mermaid.js?v=1643458669"></script>
+    <script type="text/javascript" src="/unFTP/assets/elasticlunr.js?v=1643458669"></script>
+    <script type="text/javascript" src="/unFTP/assets/prism.js?v=1643458669"></script>
+    <script type="text/javascript" src="/unFTP/assets/doctave-app.js?v=1643458669"></script>
 
     
 </body>
