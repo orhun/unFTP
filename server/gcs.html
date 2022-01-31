@@ -5,7 +5,7 @@
 <head>
     <meta charset="utf-8">
 
-    <title>The GCS BE</title>
+    <title>Cloud Storage</title>
     <meta name="description" content="Documentation for unFTP">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -13,16 +13,16 @@
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Source+Sans+Pro:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&display=swap"
         rel="stylesheet">
 
-    <link rel="stylesheet" type="text/css" href="/unFTP/assets/normalize.css?v=1643458669"
+    <link rel="stylesheet" type="text/css" href="/unFTP/assets/normalize.css?v=1643666624"
         media="screen" />
-    <link rel="stylesheet" type="text/css" href="/unFTP/assets/doctave-style.css?v=1643458669"
+    <link rel="stylesheet" type="text/css" href="/unFTP/assets/doctave-style.css?v=1643666624"
         media="screen" />
-    <link rel="stylesheet" type="text/css" href="/unFTP/assets/katex.css?v=1643458669" media="screen" />
-    <link rel="stylesheet" type="text/css" href="/unFTP/assets/prism-ghcolors.css?v=1643458669"
+    <link rel="stylesheet" type="text/css" href="/unFTP/assets/katex.css?v=1643666624" media="screen" />
+    <link rel="stylesheet" type="text/css" href="/unFTP/assets/prism-ghcolors.css?v=1643666624"
         media="screen" />
 
     <script>
-        var DOCTAVE_TIMESTAMP = "1643458669";
+        var DOCTAVE_TIMESTAMP = "1643666624";
         var BASE_PATH = "/unFTP/";
         var color = localStorage.getItem('doctave-color')
 
@@ -95,10 +95,10 @@
         <li><a href="/unFTP/server/ftps">Enabling TLS</a></li>
         
     
-        <li><a class="active" href="/unFTP/server/gcs">The GCS BE</a></li>
+        <li><a class="active" href="/unFTP/server/gcs">Cloud Storage</a></li>
         
     
-        <li><a href="/unFTP/server/jsonconfig">JSON Configuration</a></li>
+        <li><a href="/unFTP/server/jsonconfig">Per User Config</a></li>
         
     
         <li><a href="/unFTP/server/proxy-protocol">Proxy Protocol</a></li>
@@ -131,12 +131,22 @@
 
             </div>
             <div class='doctave-content'>
-                <h1 id="using-the-gcs-back-end">Using the GCS Back-end</h1>
-<p>Run with the GCS (Google Cloud Storage) back-end:</p>
+                <p>You can run unFTP with a traditional file system back-end on a bare metal or virtual machine but if you're building your 
+solutions in the cloud it would make sense to store your files in blob storage. unFTP comes with integration to <a href="https://cloud.google.com/storage">Google 
+Cloud Storage (GCS)</a>.</p>
+<h1 id="using-the-gcs-back-end">Using the GCS Back-end</h1>
+<p>You can enable the GCS backend by setting the storage back-end type (<code>--sbe-type</code>) to <code>gcs</code>. For storage authentication 
+you can choose between <a href="https://cloud.google.com/kubernetes-engine/docs/how-to/workload-identity">workload identity</a> and 
+using a service account key file. For the former set the <code>--sbe-gcs-service-account</code> argument and for the latter 
+the <code>--sbe-gcs-key-file</code> argument.</p>
+<p>The storage bucket name is chosen through <code>--sbe-gcs-bucket</code> and the root path inside the bucket through 
+<code>--sbe-gcs-root</code>. </p>
+<p>Here is an example:</p>
 <pre><code class="language-sh">unftp \
   --sbe-type=gcs \
   --sbe-gcs-bucket=mybucket \
-  --sbe-gcs-key-file=file
+  --sbe-gcs-root=ftp-base \
+  --sbe-gcs-key-file=/path/to/file
 </code></pre>
 
             </div>
@@ -168,11 +178,11 @@
             </div>
         </div>
     </div>
-    <script type="text/javascript" src="/unFTP/assets/katex.js?v=1643458669"></script>
-    <script type="text/javascript" src="/unFTP/assets/mermaid.js?v=1643458669"></script>
-    <script type="text/javascript" src="/unFTP/assets/elasticlunr.js?v=1643458669"></script>
-    <script type="text/javascript" src="/unFTP/assets/prism.js?v=1643458669"></script>
-    <script type="text/javascript" src="/unFTP/assets/doctave-app.js?v=1643458669"></script>
+    <script type="text/javascript" src="/unFTP/assets/katex.js?v=1643666624"></script>
+    <script type="text/javascript" src="/unFTP/assets/mermaid.js?v=1643666624"></script>
+    <script type="text/javascript" src="/unFTP/assets/elasticlunr.js?v=1643666624"></script>
+    <script type="text/javascript" src="/unFTP/assets/prism.js?v=1643666624"></script>
+    <script type="text/javascript" src="/unFTP/assets/doctave-app.js?v=1643666624"></script>
 
     
 </body>
