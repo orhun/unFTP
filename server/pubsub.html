@@ -5,7 +5,7 @@
 <head>
     <meta charset="utf-8">
 
-    <title>unFTP Up</title>
+    <title>Pub/Sub</title>
     <meta name="description" content="Documentation for unFTP">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -83,7 +83,7 @@
         <li><a href="/unFTP/server/installation">Installation</a></li>
         
     
-        <li><a class="active" href="/unFTP/server/starting">unFTP Up</a></li>
+        <li><a href="/unFTP/server/starting">unFTP Up</a></li>
         
     
         <li><a href="/unFTP/server/logging">Logging</a></li>
@@ -101,7 +101,7 @@
         <li><a href="/unFTP/server/jsonconfig">Per User Config</a></li>
         
     
-        <li><a href="/unFTP/server/pubsub">Pub/Sub</a></li>
+        <li><a class="active" href="/unFTP/server/pubsub">Pub/Sub</a></li>
         
     
         <li><a href="/unFTP/server/proxy-protocol">Proxy Protocol</a></li>
@@ -134,26 +134,142 @@
 
             </div>
             <div class='doctave-content'>
-                <p>Arguments can be given to unFTP either via the command line or via environment variables. To show a list of available
-program arguments type the following:</p>
-<pre><code class="language-sh">unftp --help
-</code></pre>
-<p>To run unFTP with everything set to the defaults:</p>
-<pre><code class="language-sh">unftp
-</code></pre>
-<p>This will start unFTP:</p>
-<ul>
-<li>with a filesystem back-end rooted at your OS temporary directory.</li>
-<li>the FTP control channel bound to <code>0.0.0.0:2121</code> and the data channel range set to <code>0.0.0.0</code> ports <code>49152</code>..<code>65535</code></li>
-<li>authentication being anonymous i.e. clients can specify any username and password</li>
-</ul>
-<p>Now serving data from your computer's temporary directory is not very useful so lets point it to a different directory
-by using the <code>--root-dir</code> argument. In addition, lets limit the data port range a bit:</p>
+                <p>For systems working alongside unFTP it might be useful to know of FTP related events happening. For this unFTP supports
+integration with <a href="https://cloud.google.com/pubsub">Google Pub/Sub</a>.</p>
+<h1 id="enabling-the-pub/sub-integration">Enabling the Pub/Sub integration</h1>
+<p>You can enable the unFTP Pub/Sub notifier by specifying the <code>--ntf-pubsub-project</code> and <code>--ntf-pubsub-topic</code> arguments. </p>
+<p>NOTE: Currently authentication with <a href="https://cloud.google.com/kubernetes-engine/docs/how-to/workload-identity">workload identity</a> is the 
+only supported authentication mechanism.</p>
+<p>Here is an example:</p>
 <pre><code class="language-sh">unftp \
-  -v
-  --root-dir=/home/unftp/data \
-  --bind-address=0.0.0.0:2121 \
-  --passive-ports=50000-51000 \
+  --ntf-pubsub-project="my-project" \
+  --ntf-pubsub-topic="unftp-events"
+</code></pre>
+<h1 id="the-message-format">The Message Format</h1>
+<p>The Pub/Sub message sent by unFTP contains meta data (attributes) as shown below and a body in JSON format.</p>
+<h2 id="message-attributes:">Message attributes:</h2>
+<p>Message attributes can be used to <a href="https://cloud.google.com/pubsub/docs/filtering">filter messages</a> messages such that
+when you receive messages from a subscription with a filter, you only receive the messages that match the filter. unFTP
+only specifies an <code>eventType</code> attribute:</p>
+<table><thead><tr><th>Key</th><th>Value</th><th>Description</th></tr></thead><tbody>
+<tr><td>eventType</td><td><em>One of</em>: <p>- startup <br> - login <br>- logout <br>- get <br>- put <br>- delete <br>- makeDir <br>- rename <br>- removeDir</p></td><td>Indicates the type of event</td></tr>
+</tbody></table>
+<h2 id="message-body">Message Body</h2>
+<p>The message body is a JSON object with these fields:</p>
+<table><thead><tr><th>Field</th><th>Type</th><th>Explanation</th></tr></thead><tbody>
+<tr><td>source_instance</td><td>string</td><td>This is the name of the unFTP instance as set by the <code>--instance-name</code> variable. Default is 'unFTP'.</td></tr>
+<tr><td>hostname</td><td>string</td><td>The operating system host name where unFTP is running.</td></tr>
+<tr><td>payload</td><td>Payload Object</td><td>More detail on the specific event type. See below.</td></tr>
+<tr><td>username</td><td>string</td><td>The name used during FTP login or "unknown" if not logged in yet.</td></tr>
+<tr><td>trace_id</td><td>string</td><td>A number that uniquely identifies the FTP connection or session.</td></tr>
+<tr><td>sequence_number</td><td>number</td><td>Identifies the position of the event in the sequence of events for the connection.</td></tr>
+</tbody></table>
+<p>The <code>Payload Object</code> (payload field) can be one of:</p>
+<ul>
+<li>Startup</li>
+<li>Login</li>
+<li>Logout</li>
+<li>Get</li>
+<li>Put</li>
+<li>Delete</li>
+<li>MakeDir</li>
+<li>Rename</li>
+<li>RemoveDir</li>
+</ul>
+<p>All of them are of type JSON object. Examples of their format are shown below.</p>
+<h3 id="example-events">Example Events</h3>
+<p><strong>Startup Event:</strong></p>
+<pre><code class="language-json">{
+   "source_instance":"unFTP",
+   "hostname":"MYMAC-XYZ",
+   "payload":{
+      "Startup":{
+         "libunftp_version":"0.18.3",
+         "unftp_version":"v0.13.0"
+      }
+   }
+}
+</code></pre>
+<p><strong>Login Event:</strong></p>
+<pre><code class="language-json">{
+   "source_instance":"unFTP",
+   "hostname":"MYMAC-XYZ",
+   "payload":{
+      "Login":{ }
+   },
+   "username":"hannes",
+   "trace_id":"0xe25ceb1d960303f3",
+   "sequence_number":1
+}
+</code></pre>
+<p><strong>Logout Event:</strong></p>
+<pre><code class="language-json">{
+   "source_instance":"unFTP",
+   "hostname":"MYMAC-XYZ",
+   "payload":{
+      "Logout":{ }
+   },
+   "username":"hannes",
+   "trace_id":"0xe25ceb1d960303f3",
+   "sequence_number":2
+}
+</code></pre>
+<p><strong>Get Event (FTP RETR):</strong></p>
+<pre><code class="language-json">{
+   "source_instance":"unFTP",
+   "hostname":"MYMAC-XYZ",
+   "payload":{
+      "Get":{
+         "path":"hello.txt"
+      }
+   },
+   "username":"hannes",
+   "trace_id":"0x687ee52555459a9c",
+   "sequence_number":2
+}
+</code></pre>
+<p><strong>Make Directory Event (FTP MKD):</strong></p>
+<pre><code class="language-json">{
+   "source_instance":"unFTP",
+   "hostname":"MYMAC-XYZ",
+   "payload":{
+      "MakeDir":{
+         "path":"/x"
+      }
+   },
+   "username":"hannes",
+   "trace_id":"0x687ee52555459a9c",
+   "sequence_number":3
+}
+</code></pre>
+<p><strong>Rename Event (FTP RNFR and RNTO):</strong></p>
+<pre><code class="language-json">{
+   "source_instance":"unFTP",
+   "hostname":"MYMAC-XYZ",
+   "payload":{
+      "Rename":{
+         "from":"/x",
+         "to":"/y"
+      }
+   },
+   "username":"hannes",
+   "trace_id":"0x687ee52555459a9c",
+   "sequence_number":4
+}
+</code></pre>
+<p><strong>Put Event (FTP STOR):</strong></p>
+<pre><code class="language-json">{
+   "source_instance":"unFTP",
+   "hostname":"MYMAC-XYZ",
+   "payload":{
+      "Put":{
+         "path":"x.yaml"
+      }
+   },
+   "username":"hannes",
+   "trace_id":"0x687ee52555459a9c",
+   "sequence_number":5
+}
 </code></pre>
 
             </div>
@@ -161,6 +277,26 @@ by using the <code>--root-dir</code> argument. In addition, lets limit the data 
                 <div class='page-nav' id='page-nav'>
                     <p class='page-nav-header'>On this page</p>
                     <ul>
+                        
+                        <li class='page-nav-level-1'>
+                            <a href='#enabling-the-pub/sub-integration'>Enabling the Pub/Sub integration</a>
+                        </li>
+                        
+                        <li class='page-nav-level-1'>
+                            <a href='#the-message-format'>The Message Format</a>
+                        </li>
+                        
+                        <li class='page-nav-level-2'>
+                            <a href='#message-attributes:'>Message attributes:</a>
+                        </li>
+                        
+                        <li class='page-nav-level-2'>
+                            <a href='#message-body'>Message Body</a>
+                        </li>
+                        
+                        <li class='page-nav-level-3'>
+                            <a href='#example-events'>Example Events</a>
+                        </li>
                         
                     </ul>
                 </div>
