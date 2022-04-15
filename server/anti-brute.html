@@ -5,7 +5,7 @@
 <head>
     <meta charset="utf-8">
 
-    <title>Proxy Protocol</title>
+    <title>Anti password guessing</title>
     <meta name="description" content="Documentation for unFTP">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -104,13 +104,13 @@
         <li><a href="/server/pubsub">Pub/Sub</a></li>
         
     
-        <li><a class="active" href="/server/proxy-protocol">Proxy Protocol</a></li>
+        <li><a href="/server/proxy-protocol">Proxy Protocol</a></li>
         
     
         <li><a href="/server/docker">Docker</a></li>
         
     
-        <li><a href="/server/anti-brute">Anti password guessing</a></li>
+        <li><a class="active" href="/server/anti-brute">Anti password guessing</a></li>
         
     
 </ul>
@@ -137,10 +137,37 @@
 
             </div>
             <div class='doctave-content'>
-                <h1 id="proxy-protocol-support">Proxy Protocol Support</h1>
-<p>Run behind a proxy in <a href="https://www.haproxy.com/blog/haproxy/proxy-protocol/">proxy protocol</a> mode:</p>
+                <p>To protect your FTP server against <a href="https://en.wikipedia.org/wiki/Brute-force_attack">password guessing attacks</a>, you can enable a "Failed logins policy".
+This temporarily blocks the account if too many failed logins occur.</p>
+<p>You can start up unFTP with the default failed logins policy:</p>
+<pre><code class="language-sh">unftp --failed-logins-policy
+</code></pre>
+<p>By default, 3 subsequent unsuccessful login attempts block further login attempts for that user orginating from that source IP for 5 minutes.</p>
+<p>How to adjust these parameters and the default policy is explained in the sections below.</p>
+<h2 id="adjust-max-attempts-and-duration">Adjust max attempts and duration</h2>
+<p>To change this to block after <code>5</code> attempts instead of <code>3</code>:</p>
+<pre><code class="language-sh">unftp --failed-logins-policy --failed-max-attempts 5
+</code></pre>
+<p>To change this to block for 30 minutes (<code>1800</code> seconds) instead of 5 minutes (<code>300</code> seconds):</p>
+<pre><code class="language-sh">unftp --failed-logins-policy --failed-expire-after 1800
+</code></pre>
+<h2 id="choose-another-policy">Choose another policy</h2>
+<p>By default, the temporary block applies to the <em>combination of username and source IP</em>.
+When an attacker is blocked by this policy, attempts to use other accounts, or attempts from different source IPs can still succeed.
+You can adjust this behavior by blocking based on source IP or username instead.</p>
+<p>Block by source IP instead of both IP and username:</p>
+<pre><code class="language-sh">unftp --failed-logins-policy ip
+</code></pre>
+<p>Block by username instead of both IP and username:</p>
+<pre><code class="language-sh">unftp --failed-logins-policy user
+</code></pre>
+<p>Be aware that user level -only blocking may also affect legitimate login attempts.</p>
+<h2 id="example">Example</h2>
+<p>Block an attacker based on source IP for 30 minutes after 5 unsuccessful login attempts:</p>
 <pre><code class="language-sh">unftp \
-    --proxy-external-control-port=2121
+  --failed-logins-policy ip \
+  --failed-max-attempts 5 \
+  --failed-expire-after 1800
 </code></pre>
 
             </div>
@@ -149,8 +176,16 @@
                     <p class='page-nav-header'>On this page</p>
                     <ul>
                         
-                        <li class='page-nav-level-1'>
-                            <a href='#proxy-protocol-support'>Proxy Protocol Support</a>
+                        <li class='page-nav-level-2'>
+                            <a href='#adjust-max-attempts-and-duration'>Adjust max attempts and duration</a>
+                        </li>
+                        
+                        <li class='page-nav-level-2'>
+                            <a href='#choose-another-policy'>Choose another policy</a>
+                        </li>
+                        
+                        <li class='page-nav-level-2'>
+                            <a href='#example'>Example</a>
                         </li>
                         
                     </ul>
