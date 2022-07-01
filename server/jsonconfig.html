@@ -13,16 +13,16 @@
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Source+Sans+Pro:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&display=swap"
         rel="stylesheet">
 
-    <link rel="stylesheet" type="text/css" href="/unFTP/assets/normalize.css?v=1650038625"
+    <link rel="stylesheet" type="text/css" href="/unFTP/assets/normalize.css?v=1656680989"
         media="screen" />
-    <link rel="stylesheet" type="text/css" href="/unFTP/assets/doctave-style.css?v=1650038625"
+    <link rel="stylesheet" type="text/css" href="/unFTP/assets/doctave-style.css?v=1656680989"
         media="screen" />
-    <link rel="stylesheet" type="text/css" href="/unFTP/assets/katex.css?v=1650038625" media="screen" />
-    <link rel="stylesheet" type="text/css" href="/unFTP/assets/prism-ghcolors.css?v=1650038625"
+    <link rel="stylesheet" type="text/css" href="/unFTP/assets/katex.css?v=1656680989" media="screen" />
+    <link rel="stylesheet" type="text/css" href="/unFTP/assets/prism-ghcolors.css?v=1656680989"
         media="screen" />
 
     <script>
-        var DOCTAVE_TIMESTAMP = "1650038625";
+        var DOCTAVE_TIMESTAMP = "1656680989";
         var BASE_PATH = "/unFTP/";
         var color = localStorage.getItem('doctave-color')
 
@@ -104,13 +104,13 @@
         <li><a href="/unFTP/server/pubsub">Pub/Sub</a></li>
         
     
+        <li><a href="/unFTP/server/anti-brute">Anti password guessing</a></li>
+        
+    
         <li><a href="/unFTP/server/proxy-protocol">Proxy Protocol</a></li>
         
     
         <li><a href="/unFTP/server/docker">Docker</a></li>
-        
-    
-        <li><a href="/unFTP/server/anti-brute">Anti password guessing</a></li>
         
     
 </ul>
@@ -153,6 +153,39 @@
 <pre><code class="language-sh">unftp \
     --auth-type=json \
     --auth-json-path=credentials.json
+</code></pre>
+<h2 id="generating-secure-passwords">Generating secure passwords</h2>
+<p>We provide a tool that generates a secure password for you.</p>
+<p>Generating a secure password is as simple as this:</p>
+<pre><code class="language-shell">$ docker run -ti bolcom/unftp-key-generator
+
+Enter password or press ENTER to generate one: 
+Generated password: HWJHv4pjx{RvkJc-           
+pbkdf2_salt: Hp1WZRnzOUM=                      
+pbkdf2_key: BOipkps/qYxlMLiuFcRjYUKivclvVXsc8f0T2pIvG6U=
+</code></pre>
+<p>Then add it to the JSON configuration file, specifying the <code>pbkdf2_salt</code>, <code>pbkdf2_key</code> and <code>pbkdf2_iter</code> fields instead 
+of the <code>password</code> field.</p>
+<pre><code class="language-json">[
+  {
+    "username": "alice",
+    "password": "12345678"
+  },
+  {
+    "username": "bob",
+    "password": "secret"
+  },
+  {
+    "username": "carol",
+    "pbkdf2_salt": "Hp1WZRnzOUM=",
+    "pbkdf2_key": "BOipkps/qYxlMLiuFcRjYUKivclvVXsc8f0T2pIvG6U=",
+    "pbkdf2_iter": 500000
+  }
+]
+</code></pre>
+<p>For more advanced usage see the documentation of the <a href="https://docs.rs/unftp-auth-jsonfile/0.2.1/unftp_auth_jsonfile">unftp_auth_jsonfile</a>
+crate. The key generator tool also have advanced options that you can see by running the container with the <code>-h</code> option i.e.</p>
+<pre><code class="language-shell">docker run -ti bolcom/unftp-key-generator -h
 </code></pre>
 <h2 id="per-user-settings">Per-User Settings</h2>
 <p>To do per-user settings you can expand the above-mentioned JSON file to also include some per user settings:</p>
@@ -212,6 +245,10 @@ login when providing a valid certificate.</li>
                         </li>
                         
                         <li class='page-nav-level-2'>
+                            <a href='#generating-secure-passwords'>Generating secure passwords</a>
+                        </li>
+                        
+                        <li class='page-nav-level-2'>
                             <a href='#per-user-settings'>Per-User Settings</a>
                         </li>
                         
@@ -234,11 +271,11 @@ login when providing a valid certificate.</li>
             </div>
         </div>
     </div>
-    <script type="text/javascript" src="/unFTP/assets/katex.js?v=1650038625"></script>
-    <script type="text/javascript" src="/unFTP/assets/mermaid.js?v=1650038625"></script>
-    <script type="text/javascript" src="/unFTP/assets/elasticlunr.js?v=1650038625"></script>
-    <script type="text/javascript" src="/unFTP/assets/prism.js?v=1650038625"></script>
-    <script type="text/javascript" src="/unFTP/assets/doctave-app.js?v=1650038625"></script>
+    <script type="text/javascript" src="/unFTP/assets/katex.js?v=1656680989"></script>
+    <script type="text/javascript" src="/unFTP/assets/mermaid.js?v=1656680989"></script>
+    <script type="text/javascript" src="/unFTP/assets/elasticlunr.js?v=1656680989"></script>
+    <script type="text/javascript" src="/unFTP/assets/prism.js?v=1656680989"></script>
+    <script type="text/javascript" src="/unFTP/assets/doctave-app.js?v=1656680989"></script>
 
     
 </body>
